@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AccountBrief · Research to next action</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</head>
+<body>
+  <header class="masthead"><a class="wordmark" href="/" aria-label="AccountBrief home"><span class="brand-mark" aria-hidden="true">ab</span>AccountBrief<span class="wordmark-dot">.</span></a><span class="environment">LOCAL WORKSPACE <span aria-hidden="true">↗</span></span></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">RESEARCH → QUALIFY → FOLLOW THROUGH</p><h1>A little context.<br>A clearer next step.</h1><p class="intro-copy">Keep account research, evidence, and follow-ups in one place.</p></div><aside class="sample-note"><span class="sample-label">SAMPLE WORKSPACE</span><p>Every company and scenario here is fictional. Practice the workflow with synthetic data.</p><span>No messages are sent. No external services are connected.</span></aside></div>
+    <div id="app-error" class="error-banner" role="alert" hidden><span></span><button id="retry" class="text-button">Try again</button></div>
+    <section class="summary" aria-label="Workspace overview"><div><span id="total">—</span><p>sample accounts</p></div><div><span id="active">—</span><p>active conversations</p></div><div class="overdue-metric"><span id="overdue">—</span><p>overdue next actions</p></div><div><span id="evidence">—</span><p>evidence notes</p></div></section>
+    <section class="action-strip" aria-labelledby="action-title"><div class="strip-heading"><span class="due-dot" aria-hidden="true"></span><h2 id="action-title">Needs a next step</h2><span>OVERDUE</span></div><div id="due-list" class="due-list"><p class="muted">Loading follow-ups…</p></div></section>
+    <section class="workspace" aria-label="Account research workspace">
+      <div class="ledger"><div class="ledger-title"><h2>Account ledger <span id="match-count"></span></h2><a id="export" class="export-button" href="/api/export">Export CSV <span aria-hidden="true">↓</span></a></div>
+        <form id="filters" class="filters" role="search"><label class="search-field"><span class="sr-only">Search accounts</span><span aria-hidden="true">⌕</span><input id="search" name="q" placeholder="Search company, sector, or need…" maxlength="100" autocomplete="off"></label><label><span class="sr-only">Filter by stage</span><select id="stage-filter" name="stage"><option value="">All stages</option>{% for stage in stages %}<option>{{ stage }}</option>{% endfor %}</select></label><label class="checkbox"><input id="overdue-filter" type="checkbox">Overdue only</label></form>
+        <div class="list-labels" aria-hidden="true"><span>ACCOUNT / RESEARCH FOCUS</span><span>STAGE / FOLLOW-UP</span></div><div id="account-list" class="account-list" aria-live="polite"><p class="list-message">Loading accounts…</p></div>
+        <p class="ledger-footnote">Evidence before assumptions. Each note keeps its source.</p>
+      </div>
+      <aside class="detail" aria-labelledby="detail-name"><div id="detail-placeholder" class="detail-placeholder"><span aria-hidden="true">↖</span><h2>Open an account</h2><p>Select a record to review its context and plan the next action.</p></div><div id="detail-content" hidden>
+        <p class="eyebrow">ACCOUNT BRIEF <span id="detail-id"></span></p><h2 id="detail-name"></h2><p id="detail-meta" class="detail-meta"></p><p id="detail-need" class="need"></p>
+        <form id="action-form"><h3>Plan the next step</h3><label>Stage<select id="edit-stage" required>{% for stage in stages %}<option>{{ stage }}</option>{% endfor %}</select></label><label>Follow-up date<input id="edit-date" type="date"></label><label>Next action<textarea id="edit-action" rows="2" maxlength="240" required></textarea></label><button class="primary-button" type="submit">Save next action <span aria-hidden="true">↗</span></button><p id="action-status" class="form-status" role="status"></p></form>
+        <div class="evidence-heading"><h3>Research & evidence</h3><span id="notes-count"></span></div><div id="notes" class="notes"></div>
+        <form id="note-form"><label>New evidence note<textarea id="note-body" rows="3" placeholder="What did you learn? Separate an observation from a hypothesis." minlength="3" maxlength="1200" required></textarea></label><label>Source URL<input id="note-source" type="url" placeholder="https://example.com/source" maxlength="500" required></label><button class="secondary-button" type="submit">Add evidence note <span aria-hidden="true">+</span></button><p id="note-status" class="form-status" role="status"></p></form>
+      </div></aside>
+    </section>
+  </main>
+  <footer><span>AccountBrief · A portfolio workflow demo</span><span>Research carefully. Follow through.</span></footer>
+</body>
+</html>
