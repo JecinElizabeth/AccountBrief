@@ -1,74 +1,61 @@
-# AccountBrief in 45 minutes
+# Understand AccountBrief in 45 minutes
 
-## 0–10 minutes: use the product
+## The job it helps with — 5 minutes
 
-Run the app using the README. Every record is a fictional sample. Open Cedar & Loom, read the need, change its stage, set a follow-up date, and save. Reload: the change is still there because the backend wrote to SQLite. Add a research note and a complete source URL. Filter by stage or overdue date, then export the matching rows.
+A product-success person needs more than a customer's name and a follow-up date. They need to know whether the customer is using the product, what is blocking setup, who owns the next task and what to explain at the next review.
 
-The workflow is simple: research a company, record what is known, decide the next step, and follow through. A source is evidence to inspect; it is not proof that every statement is true. Mark guesses as hypotheses.
+AccountBrief combines that information. It starts with fictional examples, and you can add your own account records. There is no AI model: explicit rules turn current data into review reasons.
 
-## 10–20 minutes: follow one saved change
+## Walk through one account — 10 minutes
 
-1. `templates/index.html` contains the stage/date/action form.
-2. `static/app.js` catches its submit event and sends a JSON `PATCH` request.
-3. `app.py` checks that the account exists, the stage is allowed, the date is valid, and the action is short enough.
-4. A parameterized SQL `UPDATE` writes the fields. The transaction commits.
-5. The browser refreshes the ledger and shows a saved message.
+1. Run the README commands and open Cedar & Loom.
+2. Read the attention reasons and compare them with the displayed usage and open work.
+3. Open the work area. Change the blocked catalog task to complete.
+4. Resolve or reopen a support issue. Review the updated account flags.
+5. Add a note explaining the next step. A source URL is optional.
+6. Export the account brief. Check that the open work and notes match the screen.
 
-Frontend means the page a person uses. Backend means the server code validating and processing requests. The database keeps information after the page closes. An API is their agreed set of requests and responses.
+Completing one task does not automatically make an account healthy. Low usage, inactivity or another unresolved issue can still require attention.
 
-## 20–30 minutes: read the SQL
+## Import a snapshot — 10 minutes
 
-The `accounts` table has one row per fictional business. The `notes` table can have many notes per account. `notes.account_id` links to `accounts.id` — a one-to-many relationship.
+Download the usage template. Its four columns are:
 
-```sql
--- Find qualified accounts.
-SELECT company, stage, next_action
-FROM accounts
-WHERE stage = 'Qualified';
-
--- Count evidence notes for each account, including accounts with no notes.
-SELECT a.company, COUNT(n.id) AS evidence_count
-FROM accounts AS a
-LEFT JOIN notes AS n ON n.account_id = a.id
-GROUP BY a.id;
-
--- Find follow-ups that need attention; closed records are excluded.
-SELECT company, followup_date, next_action
-FROM accounts
-WHERE followup_date < date('now', 'localtime') AND stage != 'Closed'
-ORDER BY followup_date;
+```csv
+account_id,seats,active_users,last_active_date
 ```
 
-The app uses `?` placeholders when adding user input to SQL. The values are sent separately from the SQL text, which prevents a search string being interpreted as a SQL command. No data is sent to a cloud database.
+Open the file and edit one account's active-user count and date. Active users must not exceed seats, and the last-active date cannot be in the future.
 
-## 30–40 minutes: test the edges
+Select the file and inspect the preview. It shows the current and proposed values, plus the attention result. Previewing changes nothing. Apply only after reviewing it.
 
-- Search for a word with no match: the page explains how to clear filters.
-- Set a past date: an active account becomes overdue. Today's date is not overdue.
-- Switch to Closed: it no longer contributes to active overdue work.
-- Add `javascript:alert(1)` as a source URL: the backend rejects it.
-- Add a next action beginning with `=` and export it: the CSV value gets a leading apostrophe so spreadsheets do not treat it as a formula.
-- Stop the server and try a filter: the interface keeps a retry path. Restart it and retry.
-- Run the unit tests. Each test gets a temporary database, so tests cannot overwrite the demo database.
+Try an invalid row, such as more active users than seats. The whole import should be rejected. It must not save the earlier valid rows while silently dropping the bad one.
 
-## 40–45 minutes: explain it clearly
+For your own account, create it first and use its displayed account ID in the CSV. New accounts have no invented usage snapshot.
 
-Suggested explanation after reviewing and demonstrating it:
+## Read the complete path — 10 minutes
 
-> AccountBrief is a local portfolio demo for account research and follow-ups. It uses a simple HTML and JavaScript interface, a Flask backend, and a SQLite database. I can search sample accounts, add a source-backed note, update a pipeline stage and next action, and export filtered data. The backend validates inputs and uses parameterized SQL. All records are synthetic, and it does not send messages or scrape websites.
+- `templates/index.html` defines forms and workspace panels.
+- `static/app.js` reads form values, sends JSON requests and renders the returned data.
+- `app.py` validates those requests and writes parameterized SQL to SQLite.
+- `calculate_health` explains the attention rules.
+- `validate_usage_csv` checks the entire batch before an import transaction writes.
+- `render_brief` turns saved account information into a downloadable Markdown file.
 
-Describe only the portions you personally reviewed, changed, tested, or can explain. Creating a repository does not establish experience working with real customers, professional sales targets, or production systems.
+The database has linked accounts, tasks, issues, notes and activity. The account ID connects each item to its account. UI changes survive refreshes because the data is stored in SQLite, rather than only in browser state.
 
-## Questions to be ready for
+## Verify and explain — 10 minutes
 
-**How does overdue work?** The server compares a stored date with today's local date. Closed accounts are excluded. It is a date rule, not AI.
+Run:
 
-**Why SQLite?** It is a database in one local file, supports SQL, needs no separate database service, and is enough for this small local example.
+```bash
+python -m unittest discover -s tests -v
+```
 
-**What happens on invalid input?** The server returns a 400 JSON error; the form displays a useful message. No partial update is written.
+Tests cover health thresholds, field checks, saved changes, old-database migration and import rollback. The browser checker separately exercises real forms, previews, exports and mobile navigation.
 
-**Does it verify the source URL?** It validates that the URL has an HTTP(S) scheme and a hostname. It does not fetch the page or establish that the claim is true.
+A concise explanation:
 
-**What would you improve for a real company?** Login and record permissions first, then proper migrations, audit history, backups, and shared hosting. The current demo is intentionally local.
+“AccountBrief is a local customer onboarding and account-review workspace. It combines usage snapshots with onboarding tasks and support issues. Explicit rules explain why an account needs attention. An owner can review the context, update work and export a brief for the next person. CSV changes are previewed and validated before they are saved together.”
 
-**What is relevant to a customer or operations role?** Organizing context, keeping evidence, recording actions, and following up. A tool supports those habits; it cannot replace good judgment or actual customer work.
+Before describing your personal contribution, make one small change, run the relevant check and explain the diff. Useful practice changes include a task label, a new account field, or a clearly documented health threshold. State team and individual work accurately.

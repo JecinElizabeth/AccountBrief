@@ -1,33 +1,39 @@
-# Product-success practice case: first useful account brief
+# A complete customer-review workflow
 
-This fictional exercise uses AccountBrief's sample data. Roles and events are illustrative. No customer engagement, adoption improvement, or personal result is claimed.
+This walkthrough uses Cedar & Loom, a fictional sample account. It demonstrates a workflow, not a measured customer result.
 
-## Sample onboarding plan
+## Situation
 
-**Goal:** a new user can find one account, understand its context, record evidence, and leave a clear next action.
+The account is still onboarding. Some product seats are inactive, catalog setup is blocked and a follow-up is due. A list of contacts would not explain which problem to address first.
 
-1. Explain that every sample company and scenario is fictional. Show the ledger, account brief, and overdue strip.
-2. Open Cedar & Loom. Distinguish the stated sample need from an untested hypothesis.
-3. Demonstrate one stage/date/action update and an evidence note with a source URL.
-4. Ask the learner to repeat the workflow, reload the page, and check that it saved.
-5. Collect one point of confusion. Agree on an owner and next action.
+## Review
 
-## Example feedback-to-action log
+1. Open Cedar & Loom and read the attention reasons.
+2. Compare the usage snapshot with the onboarding task list.
+3. Read the catalog issue and identify the current owner.
+4. Add a note describing the information needed for a field-mapping decision.
 
-These sample reports are not verified defects or real user feedback.
+The health label summarizes explicit conditions. It does not predict churn or replace a customer conversation.
 
-| Sample feedback | Classification / check | Practice owner | Next action |
-| --- | --- | --- | --- |
-| “I cannot see the account I expected.” | Support question: inspect search, stage, and overdue filters first. | Support owner | Clear filters with the learner; record whether the account appears. |
-| “I thought the example link proved the business need.” | Onboarding/content gap: clarify synthetic data and evidence limits. | Onboarding owner | Point to the sample notice and request an observation/hypothesis distinction. |
-| “I want a reminder email.” | Feature request: the app currently shows overdue work but sends no email. | Product owner | Record the request, ask about urgency, and discuss scope before promising delivery. |
+## Act and recheck
 
-Capture the reported behavior, expected behavior, evidence, owner, next action, and follow-up date. Confirm resolution with the learner rather than assuming silence means success.
+Change the catalog task to complete after the fictional exercise's setup work is done. Resolve the related issue. The account flags recalculate from the saved state.
 
-## Three acceptance tests in the existing app
+Next, import a fresh usage snapshot. Review the before/after preview, then apply it. A valid snapshot may improve one flag while another remains open; the screen should preserve that distinction.
 
-1. **Find context:** search “Cedar,” open Cedar & Loom, and confirm its brief appears. Search an unmatched name and confirm a helpful empty state.
-2. **Save an action:** update stage, follow-up date, and next action. Reload and reopen the record; all three saved values remain.
-3. **Preserve evidence:** add a clearly marked practice note with an HTTP(S) source. Reload and confirm the note/source remain. Try a `javascript:` URL and confirm rejection.
+## Handoff
 
-Explain the workflow. Do not turn these tests into invented customer metrics.
+Export the account brief. It should include:
+
+- Account owner, stage, plan and next follow-up.
+- Current usage and the remaining attention reasons.
+- Open onboarding work and unresolved issues.
+- Notes needed by the next person.
+
+This same workflow supports two responsibilities: product success can focus on adoption and blockers, while account operations can focus on owners, records, dates and a prepared conversation.
+
+## Acceptance checks
+
+1. A preview does not change saved usage; applying a valid import does.
+2. A bad row rejects the complete import instead of leaving partial updates.
+3. Completing a task or resolving an issue updates both the account view and the exported brief.
